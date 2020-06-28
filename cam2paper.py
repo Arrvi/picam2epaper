@@ -24,21 +24,21 @@ image = Image.open("/tmp/camera.jpg")
 image = image.convert('P', None, None, 1, 3)
 image = image.resize(size)
 
-imageY = Image.new('1', size, 0)
-imageB = Image.new('1', size, 0)
+imageY = Image.new('1', size, 255)
+imageB = Image.new('1', size, 255)
 
-for x in range(0, size[0]):
-	for y in range(0, size[1]):
-		point = (x, y)
-		if image.getpixel(point) == 1:
-			imageY.putpixel(point, 0)
-			imageB.putpixel(point, 255)
-		elif image.getpixel(point) == 2:
-			imageY.putpixel(point, 255)
-			imageB.putpixel(point, 0)
-		else:
-			imageY.putpixel(point, 255)
-			imageB.putpixel(point, 255)
+data = image.getdata()
+dataY = [255] * len(data)
+dataB = [255] * len(data)
+
+for i in range(0, len(data)):
+	if data[i] == 1:
+		dataY[i] = 0
+	elif data[i] == 2:
+		dataB[i] = 0
+
+imageY.putdata(dataY)
+imageB.putdata(dataB)
 
 image.save("/tmp/paper.png")
 imageY.save("/tmp/paperY.png")
